@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Database ER Diagram</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .mermaid {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            max-width: 100%;
+            overflow: auto;
+        }
+        h1 {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Academic Management System - ER Diagram</h1>
+    <div class="mermaid">
+        erDiagram
+            %% Core Entities
+            departments {
+                INTEGER id PK
+                TEXT name
+                TEXT code
+                INTEGER hod_user_id FK
+            }
+            users {
+                INTEGER id PK
+                TEXT name
+                TEXT email
+                TEXT role
+                INTEGER department_id FK
+            }
+            semesters {
+                INTEGER id PK
+                INTEGER semester_number
+                TEXT academic_year
+                BOOLEAN is_active
+            }
+            students {
+                INTEGER id PK
+                INTEGER user_id FK
+                TEXT student_roll_no
+                INTEGER department_id FK
+                INTEGER semester_id FK
+            }
+            faculty {
+                INTEGER id PK
+                INTEGER user_id FK
+                TEXT faculty_employee_id
+                INTEGER department_id FK
+            }
+            subjects {
+                INTEGER id PK
+                TEXT subject_code
+                TEXT subject_name
+                INTEGER department_id FK
+                INTEGER semester_id FK
+            }
+        
+            %% Relationships for Core Entities
+            departments ||--o{ users : "hod_user_id (Users can be HODs)"
+            users }|--o| departments : "belongs_to"
+            students ||--|| users : "is_a"
+            students }|--|| departments : "studies_in"
+            students }|--|| semesters : "enrolled_in"
+            faculty ||--|| users : "is_a"
+            faculty }|--|| departments : "teaches_in"
+            subjects }|--|| departments : "offered_by"
+            subjects }|--|| semesters : "taught_in"
+        
+            %% Academic & Assignment Entities
+            faculty_subjects {
+                INTEGER id PK
+                INTEGER faculty_id FK
+                INTEGER subject_id FK
+                INTEGER assigned_by_hod_id FK
+            }
+            attendance {
+                INTEGER id PK
+                INTEGER student_id FK
+                INTEGER subject_id FK
+                INTEGER faculty_id FK
+                TEXT status
+            }
+            internal_marks {
+                INTEGER id PK
+                INTEGER student_id FK
+                INTEGER subject_id FK
+                INTEGER faculty_id FK
+                REAL marks_obtained
+            }
+            semester_results {
+                INTEGER id PK
+                INTEGER student_id FK
+                INTEGER subject_id FK
+                INTEGER semester_id FK
+                REAL marks_obtained
+            }
+            sgpa_records {
+                INTEGER id PK
+                INTEGER student_id FK
+                INTEGER semester_id FK
+                REAL sgpa
+            }
+            cgpa_records {
+                INTEGER id PK
+                INTEGER student_id FK
+                REAL cgpa
+            }
+        
+            %% Academic Relationships
+            faculty_subjects }|--|| faculty : "assigned_to"
+            faculty_subjects }|--|| subjects : "for_subject"
+            faculty_subjects }|--o| users : "assigned_by"
+            attendance }|--|| students : "marked_for"
+            attendance }|--|| subjects : "in_subject"
+            attendance }|--|| faculty : "marked_by"
+            internal_marks }|--|| students : "scored_by"
+            internal_marks }|--|| subjects : "in_subject"
+            internal_marks }|--|| faculty : "given_by"
+            semester_results }|--|| students : "belongs_to"
+            semester_results }|--|| subjects : "in_subject"
+            semester_results }|--|| semesters : "for_semester"
+            sgpa_records }|--|| students : "belongs_to"
+            sgpa_records }|--|| semesters : "for_semester"
+            cgpa_records ||--|| students : "belongs_to"
+        
+            %% Communication & Activity Entities
+            announcements {
+                INTEGER id PK
+                TEXT title
+                INTEGER created_by FK
+                INTEGER department_id FK
+            }
+            events {
+                INTEGER id PK
+                TEXT title
+                INTEGER created_by FK
+                INTEGER department_id FK
+            }
+            feedback {
+                INTEGER id PK
+                INTEGER student_id FK
+                INTEGER faculty_id FK
+                TEXT message
+            }
+            audit_logs {
+                INTEGER id PK
+                INTEGER user_id FK
+                TEXT action
+            }
+            notifications {
+                INTEGER id PK
+                INTEGER user_id FK
+                TEXT title
+            }
+        
+            %% Communication Relationships
+            announcements }|--|| users : "created_by"
+            announcements }o--o| departments : "targets_dept"
+            events }|--|| users : "created_by"
+            events }o--o| departments : "targets_dept"
+            feedback }|--|| students : "given_by"
+            feedback }o--o| faculty : "about_faculty"
+            audit_logs }o--o| users : "performed_by"
+            notifications }|--|| users : "sent_to"
+        
+            %% Classroom Management Entities
+            classrooms {
+                INTEGER id PK
+                TEXT name
+                INTEGER subject_id FK
+                INTEGER faculty_id FK
+                INTEGER department_id FK
+                INTEGER semester_id FK
+            }
+            classroom_materials {
+                INTEGER id PK
+                INTEGER classroom_id FK
+                TEXT title
+                INTEGER posted_by FK
+            }
+            classroom_assignments {
+                INTEGER id PK
+                INTEGER classroom_id FK
+                TEXT title
+                INTEGER posted_by FK
+            }
+            assignment_submissions {
+                INTEGER id PK
+                INTEGER assignment_id FK
+                INTEGER student_id FK
+                REAL marks_obtained
+            }
+        
+            %% Classroom Relationships
+            classrooms }|--|| subjects : "for_subject"
+            classrooms }|--|| faculty : "managed_by"
+            classrooms }|--|| departments : "in_department"
+            classrooms }|--|| semesters : "for_semester"
+            classroom_materials }|--|| classrooms : "belongs_to"
+            classroom_materials }|--|| users : "posted_by"
+            classroom_assignments }|--|| classrooms : "belongs_to"
+            classroom_assignments }|--|| users : "posted_by"
+            assignment_submissions }|--|| classroom_assignments : "for_assignment"
+            assignment_submissions }|--|| students : "submitted_by"
+    </div>
+
+    <!-- Import Mermaid.js -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    </script>
+</body>
+</html>

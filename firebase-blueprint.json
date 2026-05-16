@@ -1,0 +1,91 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "System user with role-based access",
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "name": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "role": { "type": "string", "enum": ["admin", "hod", "faculty", "student"] },
+        "status": { "type": "string", "enum": ["active", "inactive"] },
+        "department_id": { "type": "integer" },
+        "phone": { "type": "string" },
+        "dob": { "type": "string" },
+        "designation": { "type": "string" }
+      },
+      "required": ["name", "email", "role"]
+    },
+    "Department": {
+      "title": "Department",
+      "description": "Academic department",
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "name": { "type": "string" },
+        "code": { "type": "string" },
+        "hod_user_id": { "type": "integer" }
+      },
+      "required": ["name", "code"]
+    },
+    "Student": {
+      "title": "Student",
+      "description": "Student specific details",
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "user_id": { "type": "integer" },
+        "student_roll_no": { "type": "string" },
+        "registration_no": { "type": "string" },
+        "department_id": { "type": "integer" },
+        "semester_id": { "type": "integer" },
+        "section": { "type": "string" },
+        "batch_year": { "type": "string" }
+      },
+      "required": ["user_id", "student_roll_no", "registration_no", "department_id", "semester_id"]
+    },
+    "Faculty": {
+      "title": "Faculty",
+      "description": "Faculty specific details",
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "user_id": { "type": "integer" },
+        "faculty_employee_id": { "type": "string" },
+        "department_id": { "type": "integer" },
+        "designation": { "type": "string" }
+      },
+      "required": ["user_id", "faculty_employee_id", "department_id"]
+    },
+    "Classroom": {
+      "title": "Classroom",
+      "description": "Virtual classroom for a subject",
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "name": { "type": "string" },
+        "subject_id": { "type": "integer" },
+        "faculty_id": { "type": "integer" },
+        "department_id": { "type": "integer" },
+        "semester_id": { "type": "integer" },
+        "section": { "type": "string" }
+      },
+      "required": ["name", "subject_id", "faculty_id", "department_id", "semester_id"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "User notification",
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "user_id": { "type": "integer" },
+        "title": { "type": "string" },
+        "message": { "type": "string" },
+        "is_read": { "type": "boolean" },
+        "created_at": { "type": "string" }
+      },
+      "required": ["user_id", "title", "message"]
+    }
+  }
+}

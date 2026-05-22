@@ -51,7 +51,7 @@ INSERT INTO faculty (user_id, faculty_employee_id, department_id, designation) V
 INSERT INTO subjects (subject_code, subject_name, department_id, semester_id, credits) VALUES 
 ('CS101', 'Data Structures', 1, 2, 4),
 ('CS102', 'Operating Systems', 1, 2, 4),
-('CS103', 'Database Management', 1, 2, 3);
+('CS103', 'Database Management', 1, 2, 4);
 
 -- 7. Faculty Subjects
 INSERT INTO faculty_subjects (faculty_id, subject_id, assigned_by_hod_id) VALUES 
